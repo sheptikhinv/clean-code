@@ -6,6 +6,7 @@ namespace Markdown.Tokens;
 public enum TokenType
 {
     Text,
+    EscapeCharacter,
     Italic,
     Bold,
     Header
