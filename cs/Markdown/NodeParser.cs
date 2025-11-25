@@ -1,124 +1,99 @@
 ﻿using Markdown.Nodes;
+using Markdown.ParsingRules;
 using Markdown.Tokens;
 
 namespace Markdown;
 
 public class NodeParser
 {
-    private List<Token> _tokens;
-    private int index;
+    private readonly List<IParsingRule> _rules;
 
-    private Token CurrentToken => _tokens[index];
-
-    private Token PeekToken(int offset = 1)
-        => index + offset < _tokens.Count ? _tokens[index + offset] : null;
-
-    private void MoveForward() => index++;
-
-    private bool IsEndOfTokens => index >= _tokens.Count;
+    public NodeParser()
+    {
+        _rules =
+        [
+            new EscapeRule(),
+            new WhiteSpaceRule(),
+            new TextRule(),
+            new HashtagRule()
+        ];
+    }
 
     public MarkdownNode ParseLine(List<Token> tokens)
     {
-        _tokens = tokens;
-        index = 0;
-
         MarkdownNode? result = null;
-
-        if (CurrentToken?.Type == TokenType.Hashtag)
+        if (tokens.Count > 0 && tokens[0].Type == TokenType.Hashtag)
         {
-            result = ParseHeader();
+            result = ParseHeader(tokens);
         }
 
-        return result ?? ParseParagraph();
+        return result ?? ParseParagraph(tokens);
     }
 
-    private HeaderNode? ParseHeader()
+    private HeaderNode? ParseHeader(List<Token> tokens)
     {
         var level = 0;
+        var position = 0;
 
-        while (CurrentToken?.Type == TokenType.Hashtag)
+        while (position < tokens.Count && tokens[position].Type == TokenType.Hashtag)
         {
             level++;
-            MoveForward();
+            position++;
         }
 
-        if (CurrentToken?.Type == TokenType.WhiteSpace)
-            MoveForward();
-        else
-        {
-            index = 0;
-            return null;
-        }
+        if (position >= tokens.Count || tokens[position].Type != TokenType.WhiteSpace) return null;
 
-        var header = new HeaderNode
+        position++;
+        return new HeaderNode
         {
-            Level = Math.Min(level, 6),
-            Children = ParseInlineContent()
+            Level = level,
+            Children = ParseInlineContent(tokens.Skip(position).ToList())
         };
-
-        return header;
     }
 
-    private ParagraphNode ParseParagraph()
+    private ParagraphNode ParseParagraph(List<Token> tokens)
     {
         var paragraph = new ParagraphNode
         {
-            Children = ParseInlineContent()
+            Children = ParseInlineContent(tokens)
         };
         return paragraph;
     }
 
-    private List<MarkdownNode> ParseInlineContent()
+    private List<MarkdownNode> ParseInlineContent(List<Token> tokens)
     {
-        var nodes = new List<MarkdownNode>();
-        while (!IsEndOfTokens)
+        var context = new ParsingContext
         {
-            var token = CurrentToken;
+            Tokens = tokens,
+            Index = 0,
+            Nodes = new List<MarkdownNode>(),
+            OpenTags = new Stack<TagInfo>()
+        };
 
-            switch (token.Type)
+        while (!context.IsEndOfTokens)
+        {
+            var token = context.CurrentToken;
+            var rule = _rules.FirstOrDefault(r => r.CanHandle(token));
+
+            if (rule != null)
             {
-                case TokenType.EscapeCharacter:
-                    MoveForward();
-                    if (!IsEndOfTokens)
-                    {
-                        var nextToken = CurrentToken;
-                        var escapedChar = nextToken.Type switch
-                        {
-                            TokenType.Underscore => "_",
-                            TokenType.Hashtag => "#",
-                            TokenType.EscapeCharacter => "\\",
-                            TokenType.Text => nextToken.Value?.FirstOrDefault().ToString() ?? "",
-                            TokenType.WhiteSpace => " ",
-                            _ => ""
-                        };
-                        if (!string.IsNullOrEmpty(escapedChar))
-                            nodes.Add(new TextNode { Content = escapedChar });
-                        MoveForward();
-                    }
-
-                    break;
-
-                case TokenType.Hashtag:
-                    nodes.Add(new TextNode { Content = "#" });
-                    MoveForward();
-                    break;
-
-                case TokenType.WhiteSpace:
-                    nodes.Add(new TextNode { Content = " " });
-                    MoveForward();
-                    break;
-
-                case TokenType.Text:
-                    nodes.Add(new TextNode { Content = token.Value! });
-                    MoveForward();
-                    break;
-
-                default:
-                    MoveForward();
-                    break;
+                rule.Handle(context);
+            }
+            else
+            {
+                context.MoveForward();
             }
         }
 
-        return nodes;
+        CloseUnclosedTags(context);
+        return context.Nodes;
+    }
+
+    private void CloseUnclosedTags(ParsingContext context)
+    {
+        while (context.OpenTags.Count > 0)
+        {
+            
+        }
     }
 }
