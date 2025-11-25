@@ -5,7 +5,7 @@ namespace Markdown;
 
 public class Tokenizer
 {
-    private readonly HashSet<char> SpecialSymbols = ['\n', '\\', '_', '#'];
+    private readonly HashSet<char> SpecialSymbols = ['\\', '_', '#', ' '];
 
     private Token ParseDefaultText(Cursor cursor)
     {
@@ -40,22 +40,18 @@ public class Tokenizer
                     cursor.MoveForward();
                     break;
                 case '_':
-                    if (cursor.IsNextCharSame('_'))
-                    {
-                        result.Add(new Token { Type = TokenType.Bold });
-                        cursor.MoveForward(2);
-                    }
-                    else
-                    {
-                        result.Add(new Token { Type = TokenType.Italic });
-                        cursor.MoveForward();
-                    }
-
-                    break;
-                case '#':
-                    result.Add(new Token { Type = TokenType.Header });
+                    result.Add(new Token { Type = TokenType.Underscore });
                     cursor.MoveForward();
                     break;
+                case '#':
+                    result.Add(new Token { Type = TokenType.Hashtag });
+                    cursor.MoveForward();
+                    break;
+                case ' ':
+                    result.Add(new Token { Type = TokenType.WhiteSpace });
+                    cursor.MoveForward();
+                    break;
+
                 default:
                     result.Add(ParseDefaultText(cursor));
                     break;

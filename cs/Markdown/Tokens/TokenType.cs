@@ -7,7 +7,7 @@ public enum TokenType
 {
     Text,
     EscapeCharacter,
-    Italic,
-    Bold,
-    Header
+    WhiteSpace,
+    Underscore,
+    Hashtag
 }

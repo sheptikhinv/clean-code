@@ -8,9 +8,10 @@ public class TokenizerTests
 {
     private void PrintTokens(List<Token> tokens)
     {
+        var index = 1;
         foreach (var token in tokens)
         {
-            Console.WriteLine(token.Type + ": " + token.Value);
+            Console.WriteLine($"{index++}. {token.Type}: \"{token.Value}\"");
         }
     }
 
@@ -34,7 +35,9 @@ public class TokenizerTests
         var text = "Hello, world";
         var expected = new List<Token>
         {
-            new Token { Type = TokenType.Text, Value = "Hello, world" }
+            new Token { Type = TokenType.Text, Value = "Hello," },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Text, Value = "world" }
         };
         var tokens = new Tokenizer().Tokenize(text);
         AssertTokensAreEqual(expected, tokens);
@@ -46,10 +49,13 @@ public class TokenizerTests
         var text = "Hello, __world__";
         var expected = new List<Token>
         {
-            new Token { Type = TokenType.Text, Value = "Hello, " },
-            new Token { Type = TokenType.Bold },
+            new Token { Type = TokenType.Text, Value = "Hello," },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Underscore },
             new Token { Type = TokenType.Text, Value = "world" },
-            new Token { Type = TokenType.Bold }
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Underscore },
         };
         var tokens = new Tokenizer().Tokenize(text);
         AssertTokensAreEqual(expected, tokens);
@@ -61,8 +67,10 @@ public class TokenizerTests
         var text = "Hello, __world";
         var expected = new List<Token>
         {
-            new Token { Type = TokenType.Text, Value = "Hello, " },
-            new Token { Type = TokenType.Bold },
+            new Token { Type = TokenType.Text, Value = "Hello," },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Underscore },
             new Token { Type = TokenType.Text, Value = "world" }
         };
         var tokens = new Tokenizer().Tokenize(text);
@@ -75,13 +83,17 @@ public class TokenizerTests
         var text = "Hello, __world _brbrbr___";
         var expected = new List<Token>
         {
-            new Token { Type = TokenType.Text, Value = "Hello, " },
-            new Token { Type = TokenType.Bold },
-            new Token { Type = TokenType.Text, Value = "world " },
-            new Token { Type = TokenType.Italic },
+            new Token { Type = TokenType.Text, Value = "Hello," },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Text, Value = "world" },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Underscore },
             new Token { Type = TokenType.Text, Value = "brbrbr" },
-            new Token { Type = TokenType.Italic },
-            new Token { Type = TokenType.Bold }
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Underscore },
+            new Token { Type = TokenType.Underscore }
         };
         var tokens = new Tokenizer().Tokenize(text);
         AssertTokensAreEqual(expected, tokens);
@@ -93,8 +105,11 @@ public class TokenizerTests
         var text = "# Hello, world";
         var expected = new List<Token>
         {
-            new Token { Type = TokenType.Header },
-            new Token { Type = TokenType.Text, Value = "Hello, world" }
+            new Token { Type = TokenType.Hashtag },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Text, Value = "Hello," },
+            new Token { Type = TokenType.WhiteSpace },
+            new Token { Type = TokenType.Text, Value = "world" }
         };
         var tokens = new Tokenizer().Tokenize(text);
         AssertTokensAreEqual(expected, tokens);
