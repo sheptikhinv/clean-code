@@ -34,7 +34,7 @@ public class MdTests
         AssertStringsAreEqualAndPrint(expected, html);
     }
 
-    [TestCase("Here w\\e should\\ still have \\backeslashes.\\",
+    [TestCase("Here w\\e should\\ still have \\backslashes.\\",
         "<p>Here w\\e should\\ still have \\backslashes.\\</p>")]
     public void Md_EscapedText(string input, string expected)
     {
@@ -56,7 +56,7 @@ public class MdTests
 
     [TestCase("__bold__", "<p><strong>bold</strong></p>")]
     [TestCase("_italic_", "<p><em>italic</em></p>")]
-    [TestCase("_expe_ct t_hi_s be corr_ect._", "<p><em>expe</em>ct t<em>hi</em>s be corr<em>ect</em>.</p>")]
+    [TestCase("_expe_ct t_hi_s be corr_ect._", "<p><em>expe</em>ct t<em>hi</em>s be corr<em>ect.</em></p>")]
     public void Md_DefaultUnderscores(string input, string expected)
     {
         var tokens = tokenizer.Tokenize(input);
