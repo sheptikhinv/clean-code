@@ -15,7 +15,8 @@ public class NodeParser
             new EscapeRule(),
             new WhiteSpaceRule(),
             new TextRule(),
-            new HashtagRule()
+            new HashtagRule(),
+            new UnderscoreRule()
         ];
     }
 
