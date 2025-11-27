@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Markdown;
 
 public class Md
@@ -9,10 +11,17 @@ public class Md
     /// <returns></returns>
     public string Render(string markdown)
     {
-        throw new NotImplementedException();
-        // Общая идея: взять изначальный markdown-текст,
-        // разбить его на строчки, в каждой строке выделить токены,
-        // после чего в Renderer их перевести в html теги, собрать обратно
-        // в полноценный текст и вернуть
+        var result = new StringBuilder();
+        var tokenizer = new Tokenizer();
+        var parser = new NodeParser();
+        var lines = markdown.Split(Environment.NewLine);
+        foreach (var line in lines)
+        {
+            var tokens = tokenizer.Tokenize(line);
+            var nodes = parser.ParseLine(tokens);
+            result.AppendLine(nodes.ToHtml());
+        }
+
+        return result.ToString();
     }
 }
