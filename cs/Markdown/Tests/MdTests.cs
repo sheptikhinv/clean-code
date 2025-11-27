@@ -109,7 +109,8 @@ public class MdTests
         AssertStringsAreEqualAndPrint(expected, html);
     }
 
-    [TestCase("[Google](https://google.com)]", "<p><a href=\"https://google.com\">Google</a></p>")]
+    [TestCase("[Google](https://google.com)", "<p><a href=\"https://google.com\">Google</a></p>")]
+    [TestCase("[_Google_](https://google.com)", "<p><a href=\"https://google.com\"><em>Google</em></a></p>")]
     public void Md_CorrectLinks(string input, string expected)
     {
         var tokens = tokenizer.Tokenize(input);
