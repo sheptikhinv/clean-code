@@ -1,5 +1,5 @@
 using System.Text;
-using Markdown.Tokens;
+using Markdown.Tokenizing.Tokens;
 
 namespace Markdown.Tokenizing;
 

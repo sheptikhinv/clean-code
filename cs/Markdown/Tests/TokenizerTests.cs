@@ -1,5 +1,5 @@
 using Markdown.Tokenizing;
-using Markdown.Tokens;
+using Markdown.Tokenizing.Tokens;
 using NUnit.Framework;
 
 namespace Markdown.Tests;

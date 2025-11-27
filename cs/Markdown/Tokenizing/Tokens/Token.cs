@@ -1,4 +1,4 @@
-namespace Markdown.Tokens;
+namespace Markdown.Tokenizing.Tokens;
 
 public class Token
 {
