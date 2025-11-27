@@ -114,4 +114,21 @@ public class TokenizerTests
         var tokens = new Tokenizer().Tokenize(text);
         AssertTokensAreEqual(expected, tokens);
     }
+
+    [Test]
+    public void Tokenizer_Link()
+    {
+        var text = "[Google](https://google.com)";
+        var expected = new List<Token>
+        {
+            new Token { Type = TokenType.LeftSquareBracket },
+            new Token { Type = TokenType.Text, Value = "Google" },
+            new Token { Type = TokenType.RightSquareBracket },
+            new Token { Type = TokenType.LeftBracket },
+            new Token { Type = TokenType.Text, Value = "https://google.com" },
+            new Token { Type = TokenType.RightBracket }
+        };
+        var tokens = new Tokenizer().Tokenize(text);
+        AssertTokensAreEqual(expected, tokens);
+    }
 }

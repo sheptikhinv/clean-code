@@ -9,5 +9,9 @@ public enum TokenType
     EscapeCharacter,
     WhiteSpace,
     Underscore,
-    Hashtag
+    Hashtag,
+    LeftSquareBracket,
+    RightSquareBracket,
+    LeftBracket,
+    RightBracket
 }
