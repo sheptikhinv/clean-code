@@ -1,6 +1,6 @@
 using Markdown.Tokens;
 
-namespace Markdown.ParsingRules;
+namespace Markdown.Parsing.Rules;
 
 public class LinkRule : IParsingRule
 {

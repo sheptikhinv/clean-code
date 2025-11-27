@@ -1,7 +1,7 @@
 ﻿using Markdown.Parsing.Nodes;
 using Markdown.Tokens;
 
-namespace Markdown.ParsingRules;
+namespace Markdown.Parsing.Rules;
 
 public class WhiteSpaceRule : IParsingRule
 {

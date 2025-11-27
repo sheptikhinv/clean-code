@@ -1,5 +1,5 @@
 ﻿using Markdown.Parsing.Nodes;
-using Markdown.ParsingRules;
+using Markdown.Parsing.Rules;
 using Markdown.Tokens;
 
 namespace Markdown;
