@@ -106,4 +106,24 @@ public class MdTests
         var html = node.ToHtml();
         AssertStringsAreEqualAndPrint(expected, html);
     }
+
+    [TestCase("[Google](https://google.com)]", "<p><a href=\"https://google.com\">Google</a></p>")]
+    public void Md_CorrectLinks(string input, string expected)
+    {
+        var tokens = tokenizer.Tokenize(input);
+        var node = parser.ParseLine(tokens);
+        var html = node.ToHtml();
+        AssertStringsAreEqualAndPrint(expected, html);
+    }
+
+    [TestCase("[[Google](https://google.com)", "<p>[<a href=\"https://google.com\">Google</a></p>")]
+    [TestCase("[Google]((https://google.com)", "<p>[Google]((https://google.com)</p>")]
+    [TestCase("[Google](https://google.com", "<p>[Google](https://google.com</p>")]
+    public void Md_IncorrectLinks(string input, string expected)
+    {
+        var tokens = tokenizer.Tokenize(input);
+        var node = parser.ParseLine(tokens);
+        var html = node.ToHtml();
+        AssertStringsAreEqualAndPrint(expected, html);
+    }
 }
