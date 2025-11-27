@@ -36,6 +36,7 @@ public class MdTests
 
     [TestCase("Here w\\e should\\ still have \\backslashes.\\",
         "<p>Here w\\e should\\ still have \\backslashes.\\</p>")]
+    [TestCase("How about \\_underscores?_", "<p>How about _underscores?_</p>")]
     public void Md_EscapedText(string input, string expected)
     {
         var tokens = tokenizer.Tokenize(input);
@@ -46,6 +47,8 @@ public class MdTests
 
     [TestCase("__bold _italic_ text__", "<p><strong>bold <em>italic</em> text</strong></p>")]
     [TestCase("_italic __not bold__ text_", "<p><em>italic __not bold__ text</em></p>")]
+    [TestCase("# Headers love __bold__ text too!", "<h1>Headers love <strong>bold</strong> text too!</h1>")]
+    [TestCase("# And _italic_!", "<h1>And <em>italic</em>!</h1>")]
     public void Md_InnerTags(string input, string expected)
     {
         var tokens = tokenizer.Tokenize(input);
@@ -57,6 +60,8 @@ public class MdTests
     [TestCase("__bold__", "<p><strong>bold</strong></p>")]
     [TestCase("_italic_", "<p><em>italic</em></p>")]
     [TestCase("_expe_ct t_hi_s be corr_ect._", "<p><em>expe</em>ct t<em>hi</em>s be corr<em>ect.</em></p>")]
+    [TestCase("_three italic words_", "<p><em>three italic words</em></p>")]
+    [TestCase("__three bold words__", "<p><strong>three bold words</strong></p>")]
     public void Md_DefaultUnderscores(string input, string expected)
     {
         var tokens = tokenizer.Tokenize(input);
@@ -68,6 +73,7 @@ public class MdTests
     [TestCase("__forgot to close", "<p>__forgot to close</p>")]
     [TestCase("forgot to open_", "<p>forgot to open_</p>")]
     [TestCase("digits_12_3", "<p>digits_12_3</p>")]
+    [TestCase("digits__12__3", "<p>digits__12__3</p>")]
     [TestCase("diff_erent wor_ds", "<p>diff_erent wor_ds</p>")]
     [TestCase("__no pair_", "<p>__no pair_</p>")]
     [TestCase("__intersection _goes__ here_", "<p>__intersection _goes__ here_</p>")]
