@@ -68,7 +68,7 @@ public class NodeParser
             Tokens = tokens,
             Index = 0,
             Nodes = new List<MarkdownNode>(),
-            OpenTags = new Stack<TagInfo>()
+            OpenedUnderscores = new Stack<UnderscoreInfo>()
         };
 
         while (!context.IsEndOfTokens)
@@ -86,15 +86,16 @@ public class NodeParser
             }
         }
 
-        CloseUnclosedTags(context);
+        CloseUnclosedUnderscores(context);
         return context.Nodes;
     }
 
-    private void CloseUnclosedTags(ParsingContext context)
+    private void CloseUnclosedUnderscores(ParsingContext context)
     {
-        while (context.OpenTags.Count > 0)
+        while (context.OpenedUnderscores.Count > 0)
         {
-            
+            var openedUnderscore = context.OpenedUnderscores.Pop();
+            context.Nodes.Insert(openedUnderscore.NodeIndex, new TextNode { Content = new string('_', openedUnderscore.Count) });
         }
     }
 }
