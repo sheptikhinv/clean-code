@@ -1,8 +1,8 @@
-﻿using Markdown.Nodes;
+﻿using Markdown.Parsing.Nodes;
 using Markdown.ParsingRules;
 using Markdown.Tokens;
 
-namespace Markdown;
+namespace Markdown.Parsing;
 
 public class NodeParser
 {
@@ -16,7 +16,8 @@ public class NodeParser
             new WhiteSpaceRule(),
             new TextRule(),
             new HashtagRule(),
-            new UnderscoreRule()
+            new UnderscoreRule(),
+            new LinkRule()
         ];
     }
 

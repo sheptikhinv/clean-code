@@ -1,4 +1,4 @@
-﻿namespace Markdown.Nodes;
+﻿namespace Markdown.Parsing.Nodes;
 
 public class ItalicNode : MarkdownNode
 {

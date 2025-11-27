@@ -1,7 +1,7 @@
 using System.Text;
 using Markdown.Tokens;
 
-namespace Markdown;
+namespace Markdown.Tokenizing;
 
 public class Tokenizer
 {

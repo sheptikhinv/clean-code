@@ -1,4 +1,4 @@
-﻿using Markdown.Nodes;
+﻿using Markdown.Parsing.Nodes;
 using Markdown.Tokens;
 
 namespace Markdown.ParsingRules;
